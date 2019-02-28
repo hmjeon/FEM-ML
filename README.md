@@ -1,3 +1,6 @@
-# tf-prac
+# TensorFlow-dev
 
-This repository is for the practice of Tensorflow.
+This repository contains different model implemented in TensorFlow.
+
+Author
+Hyungmin Jun
