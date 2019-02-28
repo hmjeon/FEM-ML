@@ -2,5 +2,5 @@
 
 This repository contains different model implemented in TensorFlow.
 
-Author
+## Author
 Hyungmin Jun
