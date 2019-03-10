@@ -1,6 +1,6 @@
 '''
-Logic Gate - Machine Learning
-Last Updated : 03/09/2019, by Hyungmin Jun (hyungminjun@outlook.com)
+Logic Gate using deep learning - Machine Learning
+Last Updated : 03/10/2019, by Hyungmin Jun (hyungminjun@outlook.com)
 
 =============================================================================
 
@@ -23,7 +23,7 @@ import numpy as np
 
 # Define sigmoid
 def sigmoid(x):
-    return 1 / (1+np.exp(-x))
+    return 1 / (1 + np.exp(-x))
 
 # Numerical derivative
 def derivative(fnc, x):
@@ -59,49 +59,61 @@ class LogicGate:
         self.__xdata = xdata.reshape(4, 2)
         self.__tdata = tdata.reshape(4, 1)
 
-        # Initialize weight and bias
-        self.__W = np.random.rand(2, 1)
-        self.__b = np.random.rand(1)
+        # Second hidden layer unit
+        self.__W2 = np.random.rand(2, 6)
+        self.__b2 = np.random.rand(6)
+
+        # Output layer unit
+        self.__W3 = np.random.rand(6, 1)
+        self.__b3 = np.random.rand(1)
 
         # Learning rate
         self.__learning_rate = 1e-2
 
-    # Loss / cost function
-    def __loss_func(self):
+    # Cross-entropy from feed forward
+    def feed_forward(self):
         delta = 1e-7
 
-        z = np.dot(self.__xdata, self.__W) + self.__b
-        y = sigmoid(z)
+        z2 = np.dot(self.__xdata, self.__W2) + self.__b2
+        a2 = sigmoid(z2)
+        z3 = np.dot(a2, self.__W3) + self.__b3
+        y  = a3 = sigmoid(z3)
 
         # Cross-entropy
         return -np.sum( self.__tdata*np.log(y + delta) + (1 - self.__tdata)*np.log((1 - y) + delta) )
 
     # Calculate errors
-    def error_val(self):
+    def loss_val(self):
         delta = 1e-7
 
-        z = np.dot(self.__xdata, self.__W) + self.__b
-        y = sigmoid(z)
+        z2 = np.dot(self.__xdata, self.__W2) + self.__b2
+        a2 = sigmoid(z2)
+        z3 = np.dot(a2, self.__W3) + self.__b3
+        y  = a3 = sigmoid(z3)
 
         # Cross-entropy
         return -np.sum( self.__tdata*np.log(y + delta) + (1 - self.__tdata)*np.log((1 - y) + delta) )
 
     # Train
     def train(self):
-        f = lambda x : self.__loss_func()
+        f = lambda x : self.feed_forward()
 
-        print('Initial error=', self.error_val())
+        print('Initial error=', self.loss_val())
 
-        for step in range(8001):
-            self.__W = self.__W - self.__learning_rate * derivative(f, self.__W)
-            self.__b = self.__b - self.__learning_rate * derivative(f, self.__b)
+        for step in range(10001):
+            self.__W2 = self.__W2 - self.__learning_rate * derivative(f, self.__W2)
+            self.__b2 = self.__b2 - self.__learning_rate * derivative(f, self.__b2)
+            self.__W3 = self.__W3 - self.__learning_rate * derivative(f, self.__W3)
+            self.__b3 = self.__b3 - self.__learning_rate * derivative(f, self.__b3)
             if(step % 400 == 0):
-                print('step=', step, 'error=', self.error_val())
+                print('step=', step, 'error=', self.loss_val())
 
     # Predict the value
-    def predict(self, input_data):
-        z = np.dot(input_data, self.__W) + self.__b
-        y = sigmoid(z)
+    def predict(self, x_data):
+        z2 = np.dot(x_data, self.__W2) + self.__b2
+        a2 = sigmoid(z2)
+        z3 = np.dot(a2, self.__W3) + self.__b3
+        y  = a3 = sigmoid(z3)
 
         if y > 0.5:
             result = 1  # True
@@ -121,9 +133,9 @@ AND_obj.train()
 # AND gate prediction
 print('\n', AND_obj.name)
 test_data = np.array([ [0, 0], [0, 1], [1, 0], [1, 1] ])
-for input_data in test_data:
-    (sigmoid_val, logical_val) = AND_obj.predict(input_data)
-    print(input_data, '=', logical_val)
+for data in test_data:
+    (sigmoid_val, logical_val) = AND_obj.predict(data)
+    print(data, '=', logical_val, sigmoid_val)
 print('\n')
 
 # --------------------------------------------------
@@ -132,15 +144,15 @@ print('\n')
 xdata = np.array([ [0, 0], [0, 1], [1, 0], [1, 1] ])
 tdata = np.array([0, 1, 1, 1])
 
-AND_obj = LogicGate('OR_GATE', xdata, tdata)
-AND_obj.train()
+OR_obj = LogicGate('OR_GATE', xdata, tdata)
+OR_obj.train()
 
 # OR gate prediction
-print('\n', AND_obj.name)
+print('\n', OR_obj.name)
 test_data = np.array([ [0, 0], [0, 1], [1, 0], [1, 1] ])
-for input_data in test_data:
-    (sigmoid_val, logical_val) = AND_obj.predict(input_data)
-    print(input_data, '=', logical_val)
+for data in test_data:
+    (sigmoid_val, logical_val) = OR_obj.predict(data)
+    print(data, '=', logical_val, sigmoid_val)
 print('\n')
 
 # --------------------------------------------------
@@ -149,15 +161,15 @@ print('\n')
 xdata = np.array([ [0, 0], [0, 1], [1, 0], [1, 1] ])
 tdata = np.array([1, 1, 1, 0])
 
-AND_obj = LogicGate('NAND_GATE', xdata, tdata)
-AND_obj.train()
+NAND_obj = LogicGate('NAND_GATE', xdata, tdata)
+NAND_obj.train()
 
 # NAND gate prediction
-print('\n', AND_obj.name)
+print('\n', NAND_obj.name)
 test_data = np.array([ [0, 0], [0, 1], [1, 0], [1, 1] ])
-for input_data in test_data:
-    (sigmoid_val, logical_val) = AND_obj.predict(input_data)
-    print(input_data, '=', logical_val)
+for data in test_data:
+    (sigmoid_val, logical_val) = NAND_obj.predict(data)
+    print(data, '=', logical_val, sigmoid_val)
 print('\n')
 
 # --------------------------------------------------
@@ -166,13 +178,13 @@ print('\n')
 xdata = np.array([ [0, 0], [0, 1], [1, 0], [1, 1] ])
 tdata = np.array([0, 1, 1, 0])
 
-AND_obj = LogicGate('XOR_GATE', xdata, tdata)
-AND_obj.train()
+XOR = LogicGate('XOR_GATE', xdata, tdata)
+XOR.train()
 
 # XOR gate prediction
-print('\n', AND_obj.name)
+print('\n', XOR.name)
 test_data = np.array([ [0, 0], [0, 1], [1, 0], [1, 1] ])
-for input_data in test_data:
-    (sigmoid_val, logical_val) = AND_obj.predict(input_data)
-    print(input_data, '=', logical_val)
+for data in test_data:
+    (sigmoid_val, logical_val) = XOR.predict(data)
+    print(data, '=', logical_val, sigmoid_val)
 print('\n')
