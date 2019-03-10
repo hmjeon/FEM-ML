@@ -140,7 +140,6 @@ test_data = np.array([3, 17])
 (real_val, logical_val) = predict(test_data)
 print('real_val=', real_val, ', logical_val=', logical_val, '\n')
 
-
 test_data = np.array([7, 21])
 (real_val, logical_val) = predict(test_data)
 print('real_val=', real_val, ', logical_val=', logical_val, '\n')
