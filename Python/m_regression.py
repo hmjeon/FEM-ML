@@ -1,5 +1,5 @@
 '''
-Linear regression - Machine Learning
+Linear regression with multiple variable - Machine Learning
 Last Updated : 03/09/2019, by Hyungmin Jun (hyungminjun@outlook.com)
 
 =============================================================================
@@ -27,14 +27,15 @@ np.set_printoptions(precision=4)
 np.random.seed(0)   # Set seed
 
 # Learning rate, from 1e-3 to 1e-6 depending on the problem
-learning_rate = 1e-2
+learning_rate = 1e-5
 
 # Set training data
-x_data = np.array([1, 2, 3, 4, 5]).reshape(5, 1)
-t_data = np.array([2, 3, 4, 5, 6]).reshape(5, 1)
+loaded_data = np.loadtxt('./data/csv_4_cols.csv', delimiter=',', dtype=np.float32)
+x_data = loaded_data[:, 0:-1]
+t_data = loaded_data[:, [-1]]
 
 # Define weight, W and bias, b as y = Wx + b
-W = np.random.rand(1, 1)
+W = np.random.rand(3, 1)
 b = np.random.rand(1)
 
 # Loss / cost function
@@ -81,10 +82,10 @@ f = lambda x : loss_func(x_data, t_data)
 
 # Print initial values
 print('\n---------------------------------------------------')
-print('Regression')
+print('Regression with multiple variables')
 print('---------------------------------------------------\n')
 print('Initial values')
-print('W=', W, ', W.shape=', W.shape, ', b=', b, ', b.shape=', b.shape)
+print('W=', W.transpose(), ', W.shape=', W.shape, ', b=', b, ', b.shape=', b.shape)
 print('Initial error=', round(error_val(x_data, t_data), 4), '\n')
 
 for step in range(8001):
@@ -93,9 +94,9 @@ for step in range(8001):
 
     if(step % 400 == 0):
         print('step=', step, ', error=', 
-        round(error_val(x_data, t_data), 4), ', W=', W, ', b=', b)
+        round(error_val(x_data, t_data), 4), ', W=', W.transpose(), ', b=', b)
 
 print('\n---------------------------------------------------')
-i_value = 43
-p_value = predict(i_value)
-print('input=', i_value, ',predict=', p_value , '\n')
+test_data = np.array([80, 79, 70])
+value = predict(test_data)
+print('input=', test_data, ',predict=', value , '\n')
