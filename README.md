@@ -21,4 +21,8 @@ Dr. Hyungmin Jun ( [Personal web](http://hyungminjun.com) | [e-mail](mailto:hyun
 *License*<br>
 TALOS is an open-source software distributed under the [GPL license, version 3](https://www.gnu.org/licenses/gpl-3.0.en.html/)
 
+<<<<<<< HEAD
 Go to [Top](#top)
+=======
+Go to [Top](#top)
+>>>>>>> d60fb868589a92fd683a218ea82f733d362eec70
