@@ -22,6 +22,10 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 import numpy as np
 import matplotlib.pyplot as plt
 
+# Download train and test data for MNIST
+# http://www.pjreddie.com/media/files/mnist_train.csv
+# http://www.pjreddie.com/media/files/mnist_test.csv
+
 # Define sigmoid
 def sigmoid(x):
     return 1 / (1 + np.exp(-x))
@@ -51,10 +55,10 @@ def derivative(fnc, x):
         it.iternext()
     return grad
 
-# Logic gate class
-class LogicGate:
-    def __init__(self, input_nodes, hidden_nodes, output_nodes):
+# NeuralNetwork class
+class NeuralNetwork:
 
+    def __init__(self, input_nodes, hidden_nodes, output_nodes):
         self.input_nodes  = input_nodes
         self.hidden_nodes = hidden_nodes
         self.output_nodes = output_nodes
@@ -72,6 +76,7 @@ class LogicGate:
 
     # Cross-entropy from feed forward
     def feed_forward(self):
+
         delta = 1e-7
 
         z1 = np.dot(self.input_data, self.W2) + self.b2
@@ -85,51 +90,94 @@ class LogicGate:
 
     # Calculate errors
     def loss_val(self):
+
         delta = 1e-7
 
-        z2 = np.dot(self.__xdata, self.__W2) + self.__b2
-        a2 = sigmoid(z2)
-        z3 = np.dot(a2, self.__W3) + self.__b3
-        y  = a3 = sigmoid(z3)
+        z1 = np.dot(self.input_data, self.W2) + self.b2
+        y1 = sigmoid(z1)
+
+        z2 = np.dot(y1, self.W3) + self.b3
+        y  = sigmoid(z2)
 
         # Cross-entropy
-        return -np.sum( self.__tdata*np.log(y + delta) + (1 - self.__tdata)*np.log((1 - y) + delta) )
+        return -np.sum( self.target_data*np.log(y + delta) + (1 - self.target_data)*np.log((1 - y) + delta) )
 
-    # Train
+    # Train, input_data = 784, target_data = 10
     def train(self, training_data):
+
+        # Normalize
+        self.target_data = np.zeros(output_nodes) + 0.01
+        self.target_data[int(training_data[0])] = 0.99
+
+        self.input_data = (training_data[1:] / 255.0 * 0.99) + 0.01
+
         f = lambda x : self.feed_forward()
 
-        print('Initial error=', self.loss_val())
-
-        for step in range(10001):
-            self.__W2 = self.__W2 - self.__learning_rate * derivative(f, self.__W2)
-            self.__b2 = self.__b2 - self.__learning_rate * derivative(f, self.__b2)
-            self.__W3 = self.__W3 - self.__learning_rate * derivative(f, self.__W3)
-            self.__b3 = self.__b3 - self.__learning_rate * derivative(f, self.__b3)
-            if(step % 400 == 0):
-                print('step=', step, 'error=', self.loss_val())
+        self.W2 = self.W2 - self.learning_rate * derivative(f, self.W2)
+        self.b2 = self.b2 - self.learning_rate * derivative(f, self.b2)
+        self.W3 = self.W3 - self.learning_rate * derivative(f, self.W3)
+        self.b3 = self.b3 - self.learning_rate * derivative(f, self.b3)
 
     # Predict the value
-    def predict(self, x_data):
-        z2 = np.dot(x_data, self.__W2) + self.__b2
-        a2 = sigmoid(z2)
-        z3 = np.dot(a2, self.__W3) + self.__b3
-        y  = a3 = sigmoid(z3)
+    def predict(self, input_data):
+        
+        z1 = np.dot(input_data, self.W2) + self.b2
+        y1 = sigmoid(z1)
+        
+        z2 = np.dot(y1, self.W3) + self.b3
+        y  = sigmoid(z2)
 
-        if y > 0.5:
-            result = 1  # True
-        else:
-            result = 0  # False
-        return y, result
+        predicted_num = np.argmax(y)
+        return predicted_num
+
+    # Accuracy
+    def accuracy(self, test_data):
+
+        matched_list     = []
+        not_matched_list = []
+
+        for index in range(len(test_data)):
+
+            label = int(test_data[index, 0])
+
+            # Normalize
+            data = (test_data[index, 1:] / 255.0 * 0.99) + 0.01
+
+            predicted_num = self.predict(data)
+
+            if label == predicted_num:
+                matched_list.append(index)
+            else:
+                not_matched_list.append(index)
+        
+        print("Current accuracy=", 100*(len(matched_list)/(len(test_data))), ' %')
+
+        return matched_list, not_matched_list
 
 # --------------------------------------------------
 # MNIST
 # --------------------------------------------------
-traning_data = np.loadtxt('./data/mnist_train.csv', delimiter=',', dtype=np.float32)
-test_data    = np.loadtxt('./data/mnist_test.csv',  delimiter=',', dtype=np.float32)
-
-print('training_data.shape=', traning_data.shape, 'test_data.shape=', test_data.shape)
-
-img = traning_data[0][1:].reshape(28, 28)
+training_data = np.loadtxt('./data/mnist_train.csv', delimiter=',', dtype=np.float32)
+test_data     = np.loadtxt('./data/mnist_test.csv',  delimiter=',', dtype=np.float32)
+'''
+img = training_data[0][1:].reshape(28, 28)
 plt.imshow(img, cmap='gray')
 plt.show()
+'''
+input_nodes  = 784
+hidden_nodes = 100
+output_nodes = 10
+
+nn = NeuralNetwork(input_nodes, hidden_nodes, output_nodes)
+
+# Training Neural network
+for step in range(30001):
+
+    index = np.random.randint(0, len(training_data) - 1)
+    nn.train(training_data[index])
+
+    #if step % 400 == 0:
+    print('step=', step, ', loss_val', nn.loss_val())
+
+# Accuracy
+nn.accuracy(test_data)

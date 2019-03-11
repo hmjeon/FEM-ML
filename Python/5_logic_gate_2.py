@@ -77,7 +77,7 @@ class LogicGate:
         z2 = np.dot(self.__xdata, self.__W2) + self.__b2
         a2 = sigmoid(z2)
         z3 = np.dot(a2, self.__W3) + self.__b3
-        y  = a3 = sigmoid(z3)
+        y  = sigmoid(z3)
 
         # Cross-entropy
         return -np.sum( self.__tdata*np.log(y + delta) + (1 - self.__tdata)*np.log((1 - y) + delta) )
@@ -89,7 +89,7 @@ class LogicGate:
         z2 = np.dot(self.__xdata, self.__W2) + self.__b2
         a2 = sigmoid(z2)
         z3 = np.dot(a2, self.__W3) + self.__b3
-        y  = a3 = sigmoid(z3)
+        y  = sigmoid(z3)
 
         # Cross-entropy
         return -np.sum( self.__tdata*np.log(y + delta) + (1 - self.__tdata)*np.log((1 - y) + delta) )
@@ -113,7 +113,7 @@ class LogicGate:
         z2 = np.dot(x_data, self.__W2) + self.__b2
         a2 = sigmoid(z2)
         z3 = np.dot(a2, self.__W3) + self.__b3
-        y  = a3 = sigmoid(z3)
+        y  = sigmoid(z3)
 
         if y > 0.5:
             result = 1  # True
