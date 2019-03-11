@@ -39,10 +39,10 @@ b = np.random.rand(1)
 
 # Loss / cost function
 def loss_func(x, t):
+
     y = np.dot(x, W) + b
     return (np.sum( (t - y)**2 )) / (len(x))
 
-# Numerical derivative
 def derivative(fnc, x):
     del_x = 1e-4    # 0.0001
 
@@ -57,9 +57,9 @@ def derivative(fnc, x):
 
         x[idx]    = float(tmp_val) + del_x
         fx1       = fnc(x)
-        x[idx]    = float(tmp_val) - del_x
+        x[idx]    = tmp_val - del_x
         fx2       = fnc(x)
-        grad[idx] = (fx1-fx2) / (2*del_x)
+        grad[idx] = (fx1 - fx2) / (2*del_x)
         
         # Recovery the original value
         x[idx] = tmp_val
