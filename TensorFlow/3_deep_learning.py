@@ -23,7 +23,7 @@ import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
 import numpy as np
 
-mnist = input_data.read_data_sets('MNIST_data/', one_hot=True)
+mnist = input_data.read_data_sets('./Data/', one_hot=True)
 
 print('\n', mnist.train.num_examples, mnist.test.num_examples, mnist.validation.num_examples)
 
@@ -65,12 +65,14 @@ loss  = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(logits=Z3, lab
 optimizer = tf.train.GradientDescentOptimizer(learning_rate)
 train     = optimizer.minimize(loss)
 
+# Compare data with argmax
 predicted_val = tf.equal(tf.argmax(A3, 1), tf.argmax(T, 1))
 
 accuracy = tf.reduce_mean(tf.cast(predicted_val, dtype=tf.float32))
 
 with tf.Session() as sess:
 
+    # Initialize variables
     sess.run(tf.global_variables_initializer())
 
     for step in range(epochs):

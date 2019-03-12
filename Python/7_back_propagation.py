@@ -156,8 +156,8 @@ class NeuralNetwork:
 # --------------------------------------------------
 # MNIST
 # --------------------------------------------------
-training_data = np.loadtxt('./data/mnist_train.csv', delimiter = ',', dtype = np.float32)
-test_data     = np.loadtxt('./data/mnist_test.csv',  delimiter = ',', dtype = np.float32)
+training_data = np.loadtxt('./Data/mnist_train.csv', delimiter = ',', dtype = np.float32)
+test_data     = np.loadtxt('./Data/mnist_test.csv',  delimiter = ',', dtype = np.float32)
 
 input_nodes   = 784
 hidden_nodes  = 100
