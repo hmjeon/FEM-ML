@@ -50,7 +50,7 @@ with tf.Session() as sess:
 
     for step in range(8001):
 
-        loss_val, _ = sess.run([loss, train], feed_dict={X: x_data, T: t_data})
+        loss_val, y_val, _ = sess.run([loss, y, train], feed_dict={X: x_data, T: t_data})
 
         if step % 400 == 0:
             print('step=', step, ', loss_val=', loss_val)
