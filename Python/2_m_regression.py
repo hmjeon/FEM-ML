@@ -30,7 +30,7 @@ np.random.seed(0)   # Set seed
 learning_rate = 1e-5
 
 # Set training data
-loaded_data = np.loadtxt('./data/csv_4_cols.csv', delimiter=',', dtype=np.float32)
+loaded_data = np.loadtxt('./Data/data_regression.csv', delimiter=',', dtype=np.float32)
 x_data = loaded_data[:, 0:-1]
 t_data = loaded_data[:, [-1]]
 
@@ -97,6 +97,6 @@ for step in range(8001):
         round(error_val(x_data, t_data), 4), ', W=', W.transpose(), ', b=', b)
 
 print('\n---------------------------------------------------')
-test_data = np.array([80, 79, 70])
+test_data = np.array([100, 98, 81])
 value = predict(test_data)
 print('input=', test_data, ',predict=', value , '\n')
