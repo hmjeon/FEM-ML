@@ -1,7 +1,7 @@
 <a name="top"></a>
-# Machine Learning
+# ML-FEM
 
-This repository contains Python scripts for machine learning.
+Machine learning for the finite element analysis
 
 ---
 
@@ -10,9 +10,9 @@ This repository contains Python scripts for machine learning.
 ---
 
 ## Structures
-+ Python - Pure Python scripts without any machine learning libraries.
-+ TensorFlow - Python scripts with TensorFlow
-+ Keras - Python scripts with Keras library
++ data: Data set
++ prac: Practice for TensorFlow and Keras
++ src: Machine leaning for the finite element analysis
 
 ## Copyrights
 *Author*<br>
